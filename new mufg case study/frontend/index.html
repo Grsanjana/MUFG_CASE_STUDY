@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTransform Pro - Banking & Finance Dataset Operations</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="app-title">DataTransform Pro <span class="sparkle">✨</span></h1>
+            <p class="subtitle">Banking & Finance Dataset Operations</p>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Step 1: Upload Dataset -->
+        <section id="step1" class="step-section active">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <h2>Upload Dataset</h2>
+            </div>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-content">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-text">Drag & drop or click to browse</p>
+                    <div class="file-types">
+                        <span class="file-type-pill">CSV</span>
+                        <span class="file-type-pill">XLS</span>
+                        <span class="file-type-pill">XLSX</span>
+                    </div>
+                    <input type="file" id="fileInput" accept=".csv,.xls,.xlsx" hidden>
+                </div>
+            </div>
+            <div id="datasetPreview" class="dataset-preview hidden">
+                <div class="preview-header">
+                    <h3>Dataset Preview</h3>
+                    <div class="preview-controls">
+                        <div class="view-toggle">
+                            <button id="viewOriginalBtn" class="view-toggle-btn" onclick="showOriginal()">
+                                <i class="fas fa-file-alt"></i> Original
+                            </button>
+                            <button id="viewTransformedBtn" class="view-toggle-btn active" onclick="showTransformed()">
+                                <i class="fas fa-magic"></i> Transformed
+                            </button>
+                        </div>
+                        <div class="dataset-stats">
+                            <span id="rowCount">0 rows</span>
+                            <span id="columnCount">0 columns</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="previewTable" class="preview-table"></table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Cleaning Operations -->
+        <section id="step2" class="step-section">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <h2>Cleaning Operations</h2>
+            </div>
+            <div class="operations-grid">
+                <button class="operation-card" data-operation="remove-null">
+                    <i class="fas fa-ban"></i>
+                    <span>Remove Null Values</span>
+                </button>
+                <button class="operation-card" data-operation="remove-duplicate">
+                    <i class="fas fa-copy"></i>
+                    <span>Remove Duplicate Rows</span>
+                </button>
+                <button class="operation-card" data-operation="rename-columns">
+                    <i class="fas fa-tag"></i>
+                    <span>Rename Columns</span>
+                </button>
+                <button class="operation-card" data-operation="change-datatypes">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Change Data Types</span>
+                </button>
+                <button class="operation-card" data-operation="trim-whitespaces">
+                    <i class="fas fa-cut"></i>
+                    <span>Trim Whitespaces</span>
+                </button>
+            </div>
+            <div id="cleaningModal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <div id="modalBody"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Mathematical Operations -->
+        <section id="step3" class="step-section">
+            <div class="step-header">
+                <span class="step-number">3</span>
+                <h2>Mathematical Operations</h2>
+            </div>
+            
+            <!-- Single Column Operations -->
+            <div class="math-section">
+                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Single Column Operations</h3>
+                <div class="math-controls">
+                    <div class="control-group">
+                        <label for="mathColumn">Select Column:</label>
+                        <select id="mathColumn" class="select-input">
+                            <option value="">-- Select Column --</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="mathOperation">Operation:</label>
+                        <select id="mathOperation" class="select-input">
+                            <option value="">-- Select Operation --</option>
+                            <option value="sum">Sum</option>
+                            <option value="average">Average</option>
+                            <option value="min">Minimum</option>
+                            <option value="max">Maximum</option>
+                            <option value="count">Count</option>
+                        </select>
+                    </div>
+                    <button id="calculateBtn" class="btn-primary">Calculate</button>
+                </div>
+                <div id="mathResults" class="results-panel hidden">
+                    <h3>Results</h3>
+                    <div id="mathStats" class="stats-display"></div>
+                </div>
+            </div>
+
+            <!-- Two Column Operations (Add, Subtract, Multiply, Divide) -->
+            <div class="math-section" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--text-primary);">Column Operations (Add, Subtract, Multiply, Divide)</h3>
+                <div class="math-controls">
+                    <div class="control-group">
+                        <label for="mathColumn1">Column 1:</label>
+                        <select id="mathColumn1" class="select-input">
+                            <option value="">-- Select Column --</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="mathColumn2">Column 2:</label>
+                        <select id="mathColumn2" class="select-input">
+                            <option value="">-- Select Column --</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="mathOperation2">Operation:</label>
+                        <select id="mathOperation2" class="select-input">
+                            <option value="">-- Select Operation --</option>
+                            <option value="add">Add (+)</option>
+                            <option value="subtract">Subtract (-)</option>
+                            <option value="multiply">Multiply (×)</option>
+                            <option value="divide">Divide (÷)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="resultColumnName">Result Column Name:</label>
+                        <input type="text" id="resultColumnName" class="select-input" placeholder="Auto-generated if empty">
+                    </div>
+                    <button id="calculateColumnOpBtn" class="btn-primary">Apply Operation</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 4: Advanced Financial Operations -->
+        <section id="step4" class="step-section">
+            <div class="step-header">
+                <span class="step-number">4</span>
+                <h2>Advanced Financial Operations</h2>
+            </div>
+            <div class="financial-controls">
+                <div class="control-group">
+                    <label for="revenueColumn">Revenue Column:</label>
+                    <select id="revenueColumn" class="select-input">
+                        <option value="">-- Select Column --</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="costColumn">Cost Column:</label>
+                    <select id="costColumn" class="select-input">
+                        <option value="">-- Select Column --</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="taxColumn">Tax Column:</label>
+                    <select id="taxColumn" class="select-input">
+                        <option value="">-- Select Column --</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="dateColumn">Date Column:</label>
+                    <select id="dateColumn" class="select-input">
+                        <option value="">-- Select Column --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="financial-operations">
+                <button class="btn-financial" data-financial="gross-profit">
+                    <i class="fas fa-chart-line"></i>
+                    Calculate Gross Profit
+                </button>
+                <button class="btn-financial" data-financial="net-profit">
+                    <i class="fas fa-dollar-sign"></i>
+                    Calculate Net Profit
+                </button>
+                <button class="btn-financial" data-financial="monthly-pl">
+                    <i class="fas fa-calendar-alt"></i>
+                    Monthly P&L Statement
+                </button>
+                <button class="btn-financial" data-financial="quarterly-pl">
+                    <i class="fas fa-calendar-week"></i>
+                    Quarterly P&L Statement
+                </button>
+            </div>
+            <div id="financialResults" class="results-panel hidden">
+                <h3>Financial Results</h3>
+                <div id="financialTables"></div>
+            </div>
+        </section>
+
+        <!-- Results Panel -->
+        <section id="resultsSection" class="results-section hidden">
+            <div class="step-header">
+                <i class="fas fa-chart-bar"></i>
+                <h2>Results</h2>
+            </div>
+            <div style="margin-bottom: 1.5rem; text-align: right;">
+                <button id="downloadTransformedBtn" class="btn-primary download-btn">
+                    <i class="fas fa-file-export"></i>
+                    Download Transformed Dataset (Excel)
+                </button>
+            </div>
+            <div id="insightsContainer" class="insights-container"></div>
+        </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+        <i class="toast-icon"></i>
+        <span class="toast-message"></span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 DataTransform Pro. Enterprise-grade data transformation platform.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
